@@ -8,21 +8,21 @@ const hashFunction=async(password)=>{
   return bcrypt.hash(password,salt)
 }
 
-
+//signup
 router.post("/signup",async(req,res)=>{
   let {data} = {"data":req.body}
   let password=data.password
-
-
   hashFunction(password).then((hashedPassword)=>{
     data.password=hashedPassword
     console.log(data)
     let userObj=new usersModel(data)
      userObj.save()
-   
   })
-  
   res.json({status:"success"})
 })
+
+
+//signin
+
 
 module.exports=router
