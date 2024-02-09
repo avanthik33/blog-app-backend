@@ -14,7 +14,6 @@ router.post("/signup",async(req,res)=>{
   let password=data.password
   hashFunction(password).then((hashedPassword)=>{
     data.password=hashedPassword
-    console.log(data)
     let userObj=new usersModel(data)
      userObj.save()
   })
@@ -23,6 +22,23 @@ router.post("/signup",async(req,res)=>{
 
 
 //signin
-
+router.post("/signin",async(req,res)=>{
+  let email=req.body.email
+  let userPassword=req.body.password
+  let data=await usersModel.findOne({email:email})
+  if(!data){
+    return(
+      res.json({status:"no user"})
+    )
+  }
+  let dbPassword=data.password
+  let match=await bcrypt.compare(userPassword,dbPassword)
+  if(!match){
+    return(
+      res.json({status:"password is not correct"})
+    )
+  }
+  res.json(data)
+})
 
 module.exports=router
